@@ -11,6 +11,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import org.lwjgl.opengl.GL11;
 
 @Mod.EventBusSubscriber(value = Side.CLIENT)
 public class RenderScreen {
@@ -26,6 +27,8 @@ public class RenderScreen {
         }
         Minecraft mc = Minecraft.getMinecraft();
         EntityPlayerSP player = mc.player;
+
+        boolean blendEnabled = GL11.glIsEnabled(GL11.GL_BLEND);
 
         GlStateManager.enableColorMaterial();
         GlStateManager.enableDepth();
@@ -50,6 +53,12 @@ public class RenderScreen {
         GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
         GlStateManager.disableTexture2D();
         GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+
+        if (blendEnabled) {
+            GlStateManager.enableBlend();
+        } else {
+            GlStateManager.disableBlend();
+        }
     }
 
     public static float getScale() {
